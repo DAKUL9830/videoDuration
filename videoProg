@@ -1,0 +1,75 @@
+<html>
+    <head>
+
+        <link href=/Users/dmitry/Desktop/videoDuration/vid.css rel="stylesheet" href="styles.css">
+    </head>
+ <body>
+   <script>
+
+let start=-1;
+let play=0;
+let played=0;
+let repeatPlay=0;
+let duration=0;
+if(video.readyState>0){
+getLength.call(video)
+//if video metadata id loaded,it gets the length
+let video=document.getElementById('video')
+}else{
+
+//if video metadaat is not loaded use event to load it
+video.addEventListener('loadedmetadata',getLength)
+}
+
+//the time when user starts palying the video
+startPlay=()=>{
+    start=new Date().getTime()
+}
+//the time when user stops palying the video
+stopPlay=(ev)=>{
+    //in case if start==-1,means the user did not start the play
+    if(start>0){
+        //calculating the length of watched video
+         played=new Date().getTime() -start;
+        start=-1;
+        play+=played;
+    }
+    //identifying if video watche dfrom the beginning to the end 
+    if(played>=duration){
+        console.log('video is fully watched')
+    }
+    repeatedPlay(ev)
+}
+//that function is using in case if user watching same piece of video for the second or more times
+
+repeatedPlay=(ev)=>{
+    repeatPlay=new Date().getTime();//start play
+    let newPlay=new Date().getTime() -repeatPlay;//calculating the length of watched video
+    //cheching if the user watching already watched before piece of video
+    if(repeatPlay>start&&newPlay<played){
+        //if watched,it will not calculate anythign
+        break
+        //otherwise we use previouse function
+    }else{
+        stopPlay(ev)
+    }
+
+}
+
+getLength=()=>{
+duration = video.duration;
+   document.getElementById("length").appendChild(new Text(Math.round(duration)+""));
+}
+
+video.addEventListener('play', startPlay);
+video.addEventListener("playing", startPlay);
+video.addEventListener("ended", stopPlay);
+video.addEventListener("pause", stopPlay);
+video.addEventListener("ended", repeatedPlay);
+video.addEventListener("pause", repeatedPlay);
+
+
+ </script>
+ 
+</body>
+</html>
